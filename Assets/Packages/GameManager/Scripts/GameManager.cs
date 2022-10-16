@@ -11,11 +11,19 @@ public partial class GameManager : MonoBehaviour
   private GameStateBase currentState = stateTitle;
 
   [SerializeField]
+  private EnemyManager _enemyManager;
+
+  [SerializeField]
   private CanvasGroup _titleCanvas;
   [SerializeField]
   private CanvasGroup _gameCanvas;
   [SerializeField]
   private CanvasGroup _resultCanvas;
+
+  [SerializeField]
+  private float _timerMax;
+
+  private float _timer;
 
   public static GameManager _instance;
 
@@ -63,6 +71,9 @@ public partial class GameManager
       Debug.Log("Title");
 
       owner._titleCanvas.gameObject.SetActive(true);
+
+      /*　2022/10/16　変更範囲　*/
+      owner.ChangeCurrentState(stateGame);
     }
 
     public override void OnUpdate(GameManager owner)
@@ -83,11 +94,21 @@ public partial class GameManager
       Debug.Log("Game");
 
       owner._gameCanvas.gameObject.SetActive(true);
+
+      /*　2022/10/16　変更範囲　*/
+      owner._timer = owner._timerMax;
     }
 
     public override void OnUpdate(GameManager owner)
     {
+      /*　2022/10/16　変更範囲　*/
+      owner._enemyManager.Generate();
 
+      owner._timer -= Time.deltaTime;
+
+      Debug.Log(owner._timer);
+
+      if (owner._timer < 0) owner.ChangeCurrentState(stateResult);
     }
 
     public override void OnExit(GameManager owner, GameStateBase nextState)
