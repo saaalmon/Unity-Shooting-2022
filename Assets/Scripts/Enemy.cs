@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CircleCollider2D))]
 public class Enemy : MonoBehaviour
 {
+  [SerializeField]
+  private CinemachineImpulseSource _hitImpulse;
+  [SerializeField]
+  private CinemachineImpulseSource _deadImpulse;
+
   [SerializeField]
   private Item _item;
   [SerializeField]
@@ -49,12 +55,16 @@ public class Enemy : MonoBehaviour
 
   private void Hit()
   {
+    _hitImpulse.GenerateImpulse();
 
+    
   }
 
   private void Dead()
   {
     Destroy(gameObject);
+
+    _deadImpulse.GenerateImpulse();
 
     ItemDrop();
   }
