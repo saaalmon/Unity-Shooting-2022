@@ -70,7 +70,7 @@ public partial class GameManager : MonoBehaviour
 
   public void ReturnButton()
   {
-    ChangeCurrentState(stateResult);
+    ChangeCurrentState(stateTitle);
   }
 }
 
