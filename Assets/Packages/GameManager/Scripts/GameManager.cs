@@ -12,6 +12,8 @@ public partial class GameManager : MonoBehaviour
 
   [SerializeField]
   private EnemyManager _enemyManager;
+  [SerializeField]
+  private UIManager _UIManager;
 
   [SerializeField]
   private CanvasGroup _titleCanvas;
@@ -60,6 +62,16 @@ public partial class GameManager : MonoBehaviour
   {
     return currentState;
   }
+
+  public void StartButton()
+  {
+    ChangeCurrentState(stateGame);
+  }
+
+  public void ReturnButton()
+  {
+    ChangeCurrentState(stateResult);
+  }
 }
 
 public partial class GameManager
@@ -72,8 +84,10 @@ public partial class GameManager
 
       owner._titleCanvas.gameObject.SetActive(true);
 
+      owner._UIManager.StartInit();
+
       /*　2022/10/16　変更範囲　*/
-      owner.ChangeCurrentState(stateGame);
+      //owner.ChangeCurrentState(stateGame);
     }
 
     public override void OnUpdate(GameManager owner)
@@ -94,6 +108,8 @@ public partial class GameManager
       Debug.Log("Game");
 
       owner._gameCanvas.gameObject.SetActive(true);
+
+      owner._UIManager.GameInit();
 
       /*　2022/10/16　変更範囲　*/
       owner._timer = owner._timerMax;
@@ -124,6 +140,8 @@ public partial class GameManager
       Debug.Log("Result");
 
       owner._resultCanvas.gameObject.SetActive(true);
+
+      owner._UIManager.ResultInit();
     }
 
     public override void OnUpdate(GameManager owner)

@@ -18,7 +18,7 @@ ScriptedImporter:
     colorMode: 0
   spriteImportOptions:
     pixelsPerUnit: 16
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.5, y: 0}
     extrude: 0
     meshType: 1
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -29,18 +29,226 @@ ScriptedImporter:
   colabOptions:
     exportToFile: 0
     exportDirectory: Sprites/{filename}
-  animationOptions: []
+  animationOptions:
+  - tagName: Idle
+    animationOptions:
+      relativePath: 
+      componentType: 0
+      overrideDirection: 0
+      direction: 0
+      loopTime: 0
+      useCustomCurve: 0
+      customCurve:
+        serializedVersion: 2
+        curve: []
+        preInfinity: 2
+        postInfinity: 2
+        rotationOrder: 4
+  - tagName: Run
+    animationOptions:
+      relativePath: 
+      componentType: 0
+      overrideDirection: 0
+      direction: 0
+      loopTime: 0
+      useCustomCurve: 0
+      customCurve:
+        serializedVersion: 2
+        curve: []
+        preInfinity: 2
+        postInfinity: 2
+        rotationOrder: 4
+  - tagName: Hit
+    animationOptions:
+      relativePath: 
+      componentType: 0
+      overrideDirection: 0
+      direction: 0
+      loopTime: 0
+      useCustomCurve: 0
+      customCurve:
+        serializedVersion: 2
+        curve: []
+        preInfinity: 2
+        postInfinity: 2
+        rotationOrder: 4
+  - tagName: Dead
+    animationOptions:
+      relativePath: 
+      componentType: 0
+      overrideDirection: 0
+      direction: 0
+      loopTime: 0
+      useCustomCurve: 0
+      customCurve:
+        serializedVersion: 2
+        curve: []
+        preInfinity: 2
+        postInfinity: 2
+        rotationOrder: 4
   sheetData:
-    frames: []
+    frames:
+    - filename: Player_Test_Idle_frame1_Layer 1
+      frame:
+        x: 0
+        y: 0
+        w: 32
+        h: 32
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 32
+        h: 32
+      sourceSize:
+        w: 32
+        h: 32
+      duration: 100
+    - filename: Player_Test_Idle_frame2_Layer 1
+      frame:
+        x: 32
+        y: 0
+        w: 32
+        h: 32
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 32
+        h: 32
+      sourceSize:
+        w: 32
+        h: 32
+      duration: 100
+    - filename: Player_Test_Idle_frame3_Layer 1
+      frame:
+        x: 64
+        y: 0
+        w: 32
+        h: 32
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 32
+        h: 32
+      sourceSize:
+        w: 32
+        h: 32
+      duration: 100
+    - filename: Player_Test_Run_frame1_Layer 1
+      frame:
+        x: 96
+        y: 0
+        w: 32
+        h: 32
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 32
+        h: 32
+      sourceSize:
+        w: 32
+        h: 32
+      duration: 100
+    - filename: Player_Test_Run_frame2_Layer 1
+      frame:
+        x: 128
+        y: 0
+        w: 32
+        h: 32
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 32
+        h: 32
+      sourceSize:
+        w: 32
+        h: 32
+      duration: 100
+    - filename: Player_Test_Run_frame3_Layer 1
+      frame:
+        x: 160
+        y: 0
+        w: 32
+        h: 32
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 32
+        h: 32
+      sourceSize:
+        w: 32
+        h: 32
+      duration: 100
+    - filename: Player_Test_Hit_frame1_Layer 1
+      frame:
+        x: 192
+        y: 0
+        w: 32
+        h: 32
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 32
+        h: 32
+      sourceSize:
+        w: 32
+        h: 32
+      duration: 100
+    - filename: Player_Test_Dead_frame1_Layer 1
+      frame:
+        x: 224
+        y: 0
+        w: 32
+        h: 32
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 32
+        h: 32
+      sourceSize:
+        w: 32
+        h: 32
+      duration: 100
     meta:
-      version: 
-      image: 
-      format: 
+      version: 1.2.40-arm64
+      image: Player_Test_sheet.png
+      format: RGBA8888
       size:
-        w: 0
-        h: 0
-      scale: 0
-      frameTags: []
+        w: 256
+        h: 32
+      scale: 1
+      frameTags:
+      - name: Idle
+        from: 0
+        to: 2
+        direction: forward
+      - name: Run
+        from: 3
+        to: 5
+        direction: forward
+      - name: Hit
+        from: 6
+        to: 6
+        direction: forward
+      - name: Dead
+        from: 7
+        to: 7
+        direction: forward
       slices: []
-    pathToSheetData: 
-    aseFileName: 
+    pathToSheetData: Temp/UnityTempFile-6ac4259c4105f41c0943f4af5a61e7b1/asetempexports/Player_Test_data.json
+    aseFileName: Assets/Sprites/Player_Test.aseprite

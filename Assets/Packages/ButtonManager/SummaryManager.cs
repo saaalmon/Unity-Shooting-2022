@@ -5,35 +5,41 @@ using UnityEngine;
 public class SummaryManager : MonoBehaviour
 {
   [SerializeField]
-  private CustomTextButton _button1;
+  private CustomTextButton _start;
 
   [SerializeField]
-  private CustomTextButton _button2;
+  private CustomTextButton _config;
 
   [SerializeField]
-  private CustomTextButton _button3;
+  private CustomTextButton _credit;
+
+  [SerializeField]
+  private CustomTextButton _ranking;
+
+  [SerializeField]
+  private CustomTextButton _return;
 
   // Start is called before the first frame update
   void Start()
   {
-    _button1.Selected();
+    _start.Selected();
 
-    _button1.onClickCallback =
+    _start.onClickCallback =
     () =>
     {
-      Debug.Log(_button1.name);
+      Debug.Log(_start.name);
     };
 
-    _button2.onClickCallback =
+    _config.onClickCallback =
     () =>
     {
-      Debug.Log(_button2.name);
+      Debug.Log(_config.name);
     };
 
-    _button3.onClickCallback =
+    _credit.onClickCallback =
     () =>
     {
-      Debug.Log(_button3.name);
+      Debug.Log(_credit.name);
     };
   }
 

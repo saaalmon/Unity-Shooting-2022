@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using DG.Tweening;
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(CircleCollider2D))]
+[RequireComponent(typeof(BoxCollider2D))]
 public class Player : MonoBehaviour
 {
   private Rigidbody2D rb;
-  private CircleCollider2D coll;
+  private BoxCollider2D coll;
   private SpriteRenderer sp;
   private Animator anim;
 
@@ -18,6 +19,8 @@ public class Player : MonoBehaviour
   private CinemachineImpulseSource _hitImpulse;
   [SerializeField]
   private CinemachineImpulseSource _deadImpulse;
+  [SerializeField]
+  private GameObject _centerPoint;
 
   [SerializeField]
   private Shot _shot;
@@ -39,7 +42,7 @@ public class Player : MonoBehaviour
   void Start()
   {
     rb = GetComponent<Rigidbody2D>();
-    coll = GetComponent<CircleCollider2D>();
+    coll = GetComponent<BoxCollider2D>();
     sp = GetComponent<SpriteRenderer>();
     anim = GetComponent<Animator>();
 
@@ -106,9 +109,12 @@ public class Player : MonoBehaviour
 
   private void Shot()
   {
-    var shot = Instantiate(_shot, transform.position, Quaternion.identity);
+    var shot = Instantiate(_shot, _centerPoint.transform.position, Quaternion.identity);
 
     shot.Init(MouseDirection());
+
+    transform.DOScaleY(0.5f, 0.05f).SetLoops(2, LoopType.Yoyo)
+    .OnComplete(() => transform.localScale = Vector3.one);
   }
 
   private Vector3 MouseDirection()

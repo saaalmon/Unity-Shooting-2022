@@ -41,3 +41,24 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Item
+    uniqueID: 3095138085
+    locked: 0
+  - name: Back
+    uniqueID: 4127197379
+    locked: 0
+  - name: Shot
+    uniqueID: 814177533
+    locked: 0
+  - name: Enemy
+    uniqueID: 254802423
+    locked: 0
+  - name: Player
+    uniqueID: 2673501741
+    locked: 0
+  - name: Particle
+    uniqueID: 2903980541
+    locked: 0
+  - name: UI
+    uniqueID: 4063857703
+    locked: 0
