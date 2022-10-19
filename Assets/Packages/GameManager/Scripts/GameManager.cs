@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public partial class GameManager : MonoBehaviour
 {
@@ -22,10 +23,13 @@ public partial class GameManager : MonoBehaviour
   [SerializeField]
   private CanvasGroup _resultCanvas;
 
-  [SerializeField]
-  private float _timerMax;
+  public float _timerMax;
 
-  private float _timer;
+  public IReadOnlyReactiveProperty<float> Timer => _timer;
+  private readonly FloatReactiveProperty _timer = new FloatReactiveProperty(0);
+
+  public IReadOnlyReactiveProperty<int> Score => _score;
+  private readonly IntReactiveProperty _score = new IntReactiveProperty(0);
 
   public static GameManager _instance;
 
@@ -42,7 +46,7 @@ public partial class GameManager : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
-
+    EventBus.Instance.Subscribe((EventBus.OnDefeatEnemy)OnDefeatEnemy);
   }
 
   // Update is called once per frame
@@ -71,6 +75,19 @@ public partial class GameManager : MonoBehaviour
   public void ReturnButton()
   {
     ChangeCurrentState(stateTitle);
+  }
+
+
+  public void AddScore(int score)
+  {
+    _score.Value += score;
+
+    Debug.Log(_score.Value);
+  }
+
+  public void OnDefeatEnemy(Enemy enemy)
+  {
+    AddScore(enemy._score);
   }
 }
 
@@ -112,7 +129,7 @@ public partial class GameManager
       owner._UIManager.GameInit();
 
       /*　2022/10/16　変更範囲　*/
-      owner._timer = owner._timerMax;
+      owner._timer.Value = owner._timerMax;
     }
 
     public override void OnUpdate(GameManager owner)
@@ -120,11 +137,11 @@ public partial class GameManager
       /*　2022/10/16　変更範囲　*/
       owner._enemyManager.Generate();
 
-      owner._timer -= Time.deltaTime;
+      owner._timer.Value -= Time.deltaTime;
 
       Debug.Log(owner._timer);
 
-      if (owner._timer < 0) owner.ChangeCurrentState(stateResult);
+      if (owner._timer.Value < 0) owner.ChangeCurrentState(stateResult);
     }
 
     public override void OnExit(GameManager owner, GameStateBase nextState)

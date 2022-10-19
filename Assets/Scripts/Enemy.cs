@@ -22,6 +22,8 @@ public class Enemy : MonoBehaviour
   [SerializeField]
   private int _itemDropCount;
 
+  public int _score;
+
   private float _hp;
 
   // Start is called before the first frame update
@@ -56,8 +58,6 @@ public class Enemy : MonoBehaviour
   private void Hit()
   {
     _hitImpulse.GenerateImpulse();
-
-    
   }
 
   private void Dead()
@@ -65,6 +65,9 @@ public class Enemy : MonoBehaviour
     Destroy(gameObject);
 
     _deadImpulse.GenerateImpulse();
+
+    EventBus.Instance.NotifyDefeatEnemy(this);
+    //GameManager._instance.AddScore(_score);
 
     ItemDrop();
   }

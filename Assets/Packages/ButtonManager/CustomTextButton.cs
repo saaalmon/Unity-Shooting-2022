@@ -27,6 +27,11 @@ public class CustomTextButton : MonoBehaviour,
     _button.Select();
   }
 
+  private void OnEnable()
+  {
+    transform.DOScale(1.0f, 0.0f);
+  }
+
   public void OnPointerClick(PointerEventData eventData)
   {
     Debug.Log("Pointer");

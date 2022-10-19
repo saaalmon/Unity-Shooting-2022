@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
+using UniRx;
 
 public class UIManager : MonoBehaviour
 {
@@ -28,10 +30,24 @@ public class UIManager : MonoBehaviour
   [SerializeField]
   private CustomTextButton _returnButton;
 
+  private int _resultScore;
+
   // Start is called before the first frame update
   void Start()
   {
+    _gameManager.Timer.Subscribe(t =>
+    {
+      _timerText.text = t.ToString("F2");
+    })
+    .AddTo(this);
 
+    _gameManager.Score.Subscribe(s =>
+    {
+      _resultScore = s;
+
+      //Debug.Log("Score:" + s);
+    })
+    .AddTo(this);
   }
 
   public void StartInit()
@@ -67,6 +83,8 @@ public class UIManager : MonoBehaviour
   public void ResultInit()
   {
     _rankingButton.Selected();
+
+    _resultScoreText.DOCounter(0, _resultScore, 0.5f);
 
     _rankingButton.onClickCallback =
     () =>

@@ -2533,7 +2533,7 @@ MonoBehaviour:
   _creditButton: {fileID: 835435758}
   _timerText: {fileID: 126779069}
   _hpGauge: {fileID: 730634841}
-  _resultScoreText: {fileID: 1050103629}
+  _resultScoreText: {fileID: 1966045570}
   _rankingButton: {fileID: 946762681}
   _returnButton: {fileID: 825320205}
 --- !u!1 &1264767178
