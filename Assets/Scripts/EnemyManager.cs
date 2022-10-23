@@ -51,24 +51,38 @@ public class EnemyManager : MonoBehaviour
     //Generate();
   }
 
-  public void Generate()
+  public IEnumerator Generate()
   {
-    _timer += Time.deltaTime;
+    // _timer += Time.deltaTime;
 
-    if (_timer > _interval)
+    // if (_timer > _interval)
+    // {
+    //   _timer = 0;
+
+    // //修正箇所
+    // var rand = Random.Range(0, _pointList.Count);
+    // var randPos = _pointList[rand];
+    // Debug.Log(randPos);
+    // _pointList.RemoveAt(rand);
+
+    while (true)
     {
-      _timer = 0;
-
-      // //修正箇所
-      // var rand = Random.Range(0, _pointList.Count);
-      // var randPos = _pointList[rand];
-      // Debug.Log(randPos);
-      // _pointList.RemoveAt(rand);
-
-
       var pos = new Vector2(Random.Range(-_limit.x, _limit.x), Random.Range(-_limit.y, _limit.y));
       var enemy = Instantiate(_enemy, pos, Quaternion.identity);
       enemy.Init();
+
+      yield return new WaitForSeconds(_interval);
+      // }
+    }
+  }
+
+  public void Defeat()
+  {
+    var findEnemy = GameObject.FindGameObjectsWithTag("Enemy");
+
+    for (var i = 0; i < findEnemy.Length; i++)
+    {
+      Destroy(findEnemy[i].gameObject);
     }
   }
 }

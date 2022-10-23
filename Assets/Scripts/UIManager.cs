@@ -19,6 +19,8 @@ public class UIManager : MonoBehaviour
   private CustomTextButton _creditButton;
 
   [SerializeField]
+  private TextMeshProUGUI _readyText;
+  [SerializeField]
   private TextMeshProUGUI _timerText;
   [SerializeField]
   private Image _hpGauge;
@@ -84,8 +86,6 @@ public class UIManager : MonoBehaviour
   {
     _rankingButton.Selected();
 
-    _resultScoreText.DOCounter(0, _resultScore, 0.5f);
-
     _rankingButton.onClickCallback =
     () =>
     {
@@ -99,5 +99,23 @@ public class UIManager : MonoBehaviour
 
       _gameManager.ReturnButton();
     };
+  }
+
+  public void SetResultScore()
+  {
+    _resultScoreText.DOCounter(0, _resultScore, 0.5f);
+  }
+
+  public void SetHpGauge(Player player)
+  {
+    _gameManager._playerInstance.Hp.Subscribe(h =>
+    {
+      _hpGauge.fillAmount = ((float)h / _gameManager._playerInstance._hpMax);
+    }).AddTo(player);
+  }
+
+  public void SetReadyText(string text)
+  {
+    _readyText.text = text;
   }
 }

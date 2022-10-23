@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using DG.Tweening;
+using UniRx;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
@@ -20,18 +21,21 @@ public class Player : MonoBehaviour
   [SerializeField]
   private CinemachineImpulseSource _deadImpulse;
   [SerializeField]
-  private GameObject _centerPoint;
+  private CinemachineImpulseSource _shotImpulse;
 
   [SerializeField]
   private Shot _shot;
   [SerializeField]
   private float _speed;
   [SerializeField]
-  private float _hpMax;
-  [SerializeField]
   private float _invTimer;
 
-  private float _hp;
+  public int _hpMax;
+
+  public IReadOnlyReactiveProperty<int> Hp => _hp;
+  private readonly IntReactiveProperty _hp = new IntReactiveProperty(0);
+
+  private bool _isInvincible = false;
 
   void Awake()
   {
@@ -46,7 +50,7 @@ public class Player : MonoBehaviour
     sp = GetComponent<SpriteRenderer>();
     anim = GetComponent<Animator>();
 
-    _hp = _hpMax;
+    _hp.Value = _hpMax;
   }
 
   // Update is called once per frame
@@ -62,16 +66,18 @@ public class Player : MonoBehaviour
 
   void OnTriggerEnter2D(Collider2D other)
   {
-    if (other.gameObject.TryGetComponent(out Item item))
+    if (other.gameObject.TryGetComponent(out Enemy enemy) && !_isInvincible)
     {
-      Destroy(other.gameObject);
+      _hp.Value--;
+      if (_hp.Value > 0) Hit();
+      else Dead();
     }
 
-    if (other.gameObject.TryGetComponent(out Enemy enemy))
+    if (other.gameObject.TryGetComponent(out Shot shot))
     {
-      _hp--;
-      if (_hp > 0) Hit();
-      else Dead();
+      if (!shot._isFollow) return;
+
+      Destroy(other.gameObject);
     }
   }
 
@@ -86,11 +92,11 @@ public class Player : MonoBehaviour
 
   private void Dead()
   {
-    Destroy(gameObject);
-
     anim.SetTrigger("isDead");
 
     _deadImpulse.GenerateImpulse();
+
+    GameManager._instance.GameFinish();
   }
 
   private void Move()
@@ -104,14 +110,15 @@ public class Player : MonoBehaviour
 
     if (h < 0) sp.flipX = true;
     if (h > 0) sp.flipX = false;
-
   }
 
   private void Shot()
   {
-    var shot = Instantiate(_shot, _centerPoint.transform.position, Quaternion.identity);
+    var shot = Instantiate(_shot, transform.position, Quaternion.identity);
 
     shot.Init(MouseDirection());
+
+    _shotImpulse.GenerateImpulse();
 
     transform.DOScaleY(0.5f, 0.05f).SetLoops(2, LoopType.Yoyo)
     .OnComplete(() => transform.localScale = Vector3.one);
@@ -128,10 +135,10 @@ public class Player : MonoBehaviour
 
   private IEnumerator InvincibleTime()
   {
-    coll.enabled = false;
+    _isInvincible = true;
 
     yield return new WaitForSeconds(_invTimer);
 
-    coll.enabled = true;
+    _isInvincible = false;
   }
 }

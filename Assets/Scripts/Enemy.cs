@@ -11,9 +11,9 @@ public class Enemy : MonoBehaviour
   private CinemachineImpulseSource _hitImpulse;
   [SerializeField]
   private CinemachineImpulseSource _deadImpulse;
-
   [SerializeField]
-  private Item _item;
+  private ParticleSystem _deadParticle;
+
   [SerializeField]
   private float _speed;
   [SerializeField]
@@ -42,8 +42,6 @@ public class Enemy : MonoBehaviour
   {
     if (other.gameObject.TryGetComponent(out Shot shot))
     {
-      Destroy(other.gameObject);
-
       _hp--;
       if (_hp > 0) Hit();
       else Dead();
@@ -58,6 +56,9 @@ public class Enemy : MonoBehaviour
   private void Hit()
   {
     _hitImpulse.GenerateImpulse();
+
+    Instantiate(_deadParticle, transform.position, Quaternion.identity);
+
   }
 
   private void Dead()
@@ -66,24 +67,27 @@ public class Enemy : MonoBehaviour
 
     _deadImpulse.GenerateImpulse();
 
+    Instantiate(_deadParticle, transform.position, Quaternion.identity);
+
     EventBus.Instance.NotifyDefeatEnemy(this);
+
     //GameManager._instance.AddScore(_score);
 
-    ItemDrop();
+    //ItemDrop();
   }
 
-  private void ItemDrop()
-  {
-    for (var i = 0; i < _itemDropCount; i++)
-    {
-      var item = Instantiate(_item, transform.position, Quaternion.identity);
+  // private void ItemDrop()
+  // {
+  //   for (var i = 0; i < _itemDropCount; i++)
+  //   {
+  //     var item = Instantiate(_item, transform.position, Quaternion.identity);
 
-      var angle = Random.Range(0, 360);
-      var f = angle * Mathf.Deg2Rad;
+  //     var angle = Random.Range(0, 360);
+  //     var f = angle * Mathf.Deg2Rad;
 
-      var itemDirection = new Vector3(Mathf.Cos(f), Mathf.Sin(f), 0);
+  //     var itemDirection = new Vector3(Mathf.Cos(f), Mathf.Sin(f), 0);
 
-      item.Init(itemDirection);
-    }
-  }
+  //     item.Init(itemDirection);
+  //   }
+  // }
 }

@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 4353603722167412104}
   - component: {fileID: 8740527056286503697}
   - component: {fileID: 573738200523264393}
+  - component: {fileID: -202189564471191661}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,10 +77,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 254802423
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: 154bc8bfe76ce4b6aaa129d69decd219, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: -4008898430271998344, guid: 5d1139339c29a4ca599e1eb506dc6b35, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -140,11 +141,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hitImpulse: {fileID: 8585431078113825025}
   _deadImpulse: {fileID: 5400883902044394512}
+  _deadParticle: {fileID: 1250084612787549438, guid: 39db4e5a753844f4fb180e0442513e9c, type: 3}
   _item: {fileID: 3803438921721279545, guid: 785ff7746397f4cfead20021d0453749, type: 3}
   _speed: 5
-  _hpMax: 10
-  _score: 100
+  _hpMax: 3
   _itemDropCount: 5
+  _score: 100
+--- !u!95 &-202189564471191661
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180992236255692578}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 99c49e45b4f544044b3d2e7e3aa9350d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6572477588254972519
 GameObject:
   m_ObjectHideFlags: 0

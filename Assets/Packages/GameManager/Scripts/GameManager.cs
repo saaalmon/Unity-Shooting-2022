@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using Cinemachine;
+using UnityEngine.Timeline;
+using UnityEngine.Playables;
 
 public partial class GameManager : MonoBehaviour
 {
@@ -15,6 +18,10 @@ public partial class GameManager : MonoBehaviour
   private EnemyManager _enemyManager;
   [SerializeField]
   private UIManager _UIManager;
+  [SerializeField]
+  private CinemachineVirtualCamera _cinemaCamea;
+  [SerializeField]
+  private PlayableDirector _director;
 
   [SerializeField]
   private CanvasGroup _titleCanvas;
@@ -23,7 +30,22 @@ public partial class GameManager : MonoBehaviour
   [SerializeField]
   private CanvasGroup _resultCanvas;
 
+  [SerializeField]
+  private TimelineAsset _titleIn;
+  [SerializeField]
+  private TimelineAsset _gameIn;
+  [SerializeField]
+  private TimelineAsset _gameOut;
+  [SerializeField]
+  private TimelineAsset _resultIn;
+
+
+  [SerializeField]
+  private Player _player;
+
   public float _timerMax;
+
+  public Player _playerInstance;
 
   public IReadOnlyReactiveProperty<float> Timer => _timer;
   private readonly FloatReactiveProperty _timer = new FloatReactiveProperty(0);
@@ -32,6 +54,9 @@ public partial class GameManager : MonoBehaviour
   private readonly IntReactiveProperty _score = new IntReactiveProperty(0);
 
   public static GameManager _instance;
+
+  private Coroutine _generateCor;
+  private Coroutine _timerCor;
 
   void Awake()
   {
@@ -72,6 +97,11 @@ public partial class GameManager : MonoBehaviour
     ChangeCurrentState(stateGame);
   }
 
+  public void ResultButton()
+  {
+    ChangeCurrentState(stateResult);
+  }
+
   public void ReturnButton()
   {
     ChangeCurrentState(stateTitle);
@@ -89,6 +119,72 @@ public partial class GameManager : MonoBehaviour
   {
     AddScore(enemy._score);
   }
+
+  public bool CompletedTimeLine(PlayableDirector director)
+  {
+    return director.time >= director.duration;
+  }
+
+  private IEnumerator CountTimer()
+  {
+    while (true)
+    {
+      _timer.Value -= Time.deltaTime;
+
+      if (_timer.Value < 0)
+      {
+        _timer.Value = 0;
+        GameFinish();
+      }
+      yield return 0;
+    }
+  }
+
+  public void TitleInit()
+  {
+
+  }
+
+  public void GameInit()
+  {
+    Debug.Log("play");
+
+    var player = Instantiate(_player, transform.position, Quaternion.identity);
+    _playerInstance = player;
+    _UIManager.SetHpGauge(player);
+
+    _cinemaCamea.Follow = _playerInstance.transform;
+
+    /*　2022/10/16　変更範囲　*/
+    _timer.Value = _timerMax;
+    _score.Value = 0;
+
+    _generateCor = StartCoroutine(_enemyManager.Generate());
+    _timerCor = StartCoroutine(CountTimer());
+  }
+
+  public void GameFinish()
+  {
+    Destroy(_playerInstance.gameObject);
+    _playerInstance = null;
+
+    StopCoroutine(_generateCor);
+    StopCoroutine(_timerCor);
+
+    _cinemaCamea.Follow = null;
+
+    _enemyManager.Defeat();
+
+    _director.playableAsset = _gameOut;
+    _director.Play();
+
+    Debug.Log("finish");
+  }
+
+  public void ResultInit()
+  {
+
+  }
 }
 
 public partial class GameManager
@@ -102,6 +198,9 @@ public partial class GameManager
       owner._titleCanvas.gameObject.SetActive(true);
 
       owner._UIManager.StartInit();
+
+      owner._director.playableAsset = owner._titleIn;
+      owner._director.Play();
 
       /*　2022/10/16　変更範囲　*/
       //owner.ChangeCurrentState(stateGame);
@@ -128,20 +227,30 @@ public partial class GameManager
 
       owner._UIManager.GameInit();
 
-      /*　2022/10/16　変更範囲　*/
-      owner._timer.Value = owner._timerMax;
+      owner._director.playableAsset = owner._gameIn;
+      owner._director.Play();
+
+      // var player = Instantiate(owner._player, owner.transform.position, Quaternion.identity);
+      // owner._playerInstance = player;
+      // owner._UIManager.SetHpGauge(player);
+
+      // owner._cinemaCamea.Follow = owner._playerInstance.transform;
+
+      // /*　2022/10/16　変更範囲　*/
+      // owner._timer.Value = owner._timerMax;
+      // owner._score.Value = 0;
     }
 
     public override void OnUpdate(GameManager owner)
     {
       /*　2022/10/16　変更範囲　*/
-      owner._enemyManager.Generate();
+      // owner._enemyManager.Generate();
 
-      owner._timer.Value -= Time.deltaTime;
+      // owner._timer.Value -= Time.deltaTime;
 
-      Debug.Log(owner._timer);
+      // Debug.Log(owner._timer);
 
-      if (owner._timer.Value < 0) owner.ChangeCurrentState(stateResult);
+      // if (owner._timer.Value < 0) owner.ChangeCurrentState(stateResult);
     }
 
     public override void OnExit(GameManager owner, GameStateBase nextState)
@@ -159,6 +268,17 @@ public partial class GameManager
       owner._resultCanvas.gameObject.SetActive(true);
 
       owner._UIManager.ResultInit();
+
+      owner._director.playableAsset = owner._resultIn;
+      owner._director.Play();
+
+
+      // Destroy(owner._playerInstance.gameObject);
+      // owner._playerInstance = null;
+
+      // owner._cinemaCamea.Follow = null;
+
+      // owner._enemyManager.Defeat();
     }
 
     public override void OnUpdate(GameManager owner)

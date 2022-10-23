@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -46,6 +47,9 @@ TagManager:
     locked: 0
   - name: Back
     uniqueID: 4127197379
+    locked: 0
+  - name: Follow
+    uniqueID: 2557892689
     locked: 0
   - name: Shot
     uniqueID: 814177533
