@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using DG.Tweening;
 using UniRx;
+using UnityEngine.Pool;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
@@ -24,13 +25,18 @@ public class Player : MonoBehaviour
   private CinemachineImpulseSource _shotImpulse;
 
   [SerializeField]
-  private Shot _shot;
+  private Shot _prefab;
   [SerializeField]
   private float _speed;
   [SerializeField]
   private float _invTimer;
 
   public int _hpMax;
+
+  public Shot _shot { get; private set; }
+
+  private ObjectPool<Shot> _pool;
+  private GameObject _parent;
 
   public IReadOnlyReactiveProperty<int> Hp => _hp;
   private readonly IntReactiveProperty _hp = new IntReactiveProperty(0);
@@ -51,6 +57,17 @@ public class Player : MonoBehaviour
     anim = GetComponent<Animator>();
 
     _hp.Value = _hpMax;
+
+    _parent = new GameObject("Shots");
+
+    _pool = new ObjectPool<Shot>(
+        () => Instantiate(_shot, _parent.transform),             // プールが空のときに新しいインスタンスを生成する処理
+        target => target.gameObject.SetActive(true),             // プールから取り出されたときの処理 
+        target => target.gameObject.SetActive(false),            // プールに戻したときの処理
+        target => Destroy(target),                               // プールがmaxSizeを超えたときの処理
+        true,                                                    // 同一インスタンスが登録されていないかチェックするかどうか
+        10,                                                      // デフォルトの容量
+        100);
   }
 
   // Update is called once per frame
@@ -68,6 +85,8 @@ public class Player : MonoBehaviour
   {
     if (other.gameObject.TryGetComponent(out Enemy enemy) && !_isInvincible)
     {
+      //enemy._manager.ReleaseEnemy(enemy);
+
       _hp.Value--;
       if (_hp.Value > 0) Hit();
       else Dead();
@@ -77,17 +96,17 @@ public class Player : MonoBehaviour
     {
       if (!shot._isFollow) return;
 
-      Destroy(other.gameObject);
+      shot._manager.ReleaseShot(shot);
     }
   }
 
   private void Hit()
   {
-    StartCoroutine(InvincibleTime());
-
     anim.SetTrigger("isHit");
 
     _hitImpulse.GenerateImpulse();
+
+    StartCoroutine(InvincibleTime());
   }
 
   private void Dead()
@@ -97,12 +116,14 @@ public class Player : MonoBehaviour
     _deadImpulse.GenerateImpulse();
 
     GameManager._instance.GameFinish();
+
+    ClearShot();
   }
 
   private void Move()
   {
-    var h = Input.GetAxisRaw("Horizontal");
-    var v = Input.GetAxisRaw("Vertical");
+    var h = Input.GetAxis("Horizontal");
+    var v = Input.GetAxis("Vertical");
 
     rb.velocity = new Vector2(h * _speed, v * _speed);
 
@@ -114,14 +135,37 @@ public class Player : MonoBehaviour
 
   private void Shot()
   {
-    var shot = Instantiate(_shot, transform.position, Quaternion.identity);
+    _shot = _prefab;
 
-    shot.Init(MouseDirection());
+    //プールオブジェクトの取得
+    var prefab = _pool.Get();
+    prefab.transform.position = transform.position;
+
+    prefab.Init(this, MouseDirection());
+
+    // var shot = Instantiate(_shot, transform.position, Quaternion.identity);
+
+    // shot.Init(MouseDirection());
 
     _shotImpulse.GenerateImpulse();
 
-    transform.DOScaleY(0.5f, 0.05f).SetLoops(2, LoopType.Yoyo)
-    .OnComplete(() => transform.localScale = Vector3.one);
+    // transform.DOScaleY(0.5f, 0.05f).SetLoops(2, LoopType.Yoyo)
+    // .OnComplete(() => transform.localScale = Vector3.one);
+  }
+
+  public void ReleaseShot(Shot shot)
+  {
+    _pool.Release(shot);
+  }
+
+  public void ClearShot()
+  {
+    var shots = _parent.GetComponentsInChildren<Shot>();
+
+    for (var i = 0; i < shots.Length; i++)
+    {
+      _pool.Release(shots[i]);
+    }
   }
 
   private Vector3 MouseDirection()

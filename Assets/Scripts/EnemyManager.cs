@@ -1,88 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class EnemyManager : MonoBehaviour
 {
   [SerializeField]
-  private Enemy _enemy;
+  private Enemy _prefab;
   [SerializeField]
   private float _interval;
   [SerializeField]
   private Vector2 _limit;
-  [SerializeField]
-  private int _length;
 
-  private float _timer;
+  public Enemy _enemy { get; private set; }
 
-  private int[,] _mapList;
-  private List<Vector2> _pointList = new List<Vector2>();
-
-  void Awake()
-  {
-    // //初期化
-    // for (var y = 0; y < _length; y++)
-    // {
-    //   for (var x = 0; x < _length; x++)
-    //   {
-    //     //_mapList[x, y] = 0;
-
-    //     _pointList.Add(new Vector2(x, y));
-
-    //     //Debug.Log(_mapList[x, y]);
-    //   }
-    // }
-
-    // for (var i = 0; i < _pointList.Count; i++)
-    // {
-    //   Debug.Log(_pointList[i]);
-    // }
-  }
+  private ObjectPool<Enemy> _pool;
+  private GameObject _parent;
 
   // Start is called before the first frame update
   void Start()
   {
+    _parent = new GameObject("Enemies");
 
-  }
-
-  // Update is called once per frame
-  void Update()
-  {
-    //Generate();
+    _pool = new ObjectPool<Enemy>(
+        () => Instantiate(_enemy, _parent.transform),
+        target => target.gameObject.SetActive(true),
+        target => target.gameObject.SetActive(false),
+        target => Destroy(target),
+        true, 10, 20);
   }
 
   public IEnumerator Generate()
   {
-    // _timer += Time.deltaTime;
-
-    // if (_timer > _interval)
-    // {
-    //   _timer = 0;
-
-    // //修正箇所
-    // var rand = Random.Range(0, _pointList.Count);
-    // var randPos = _pointList[rand];
-    // Debug.Log(randPos);
-    // _pointList.RemoveAt(rand);
-
     while (true)
     {
+      _enemy = _prefab;
+
+      var enemy = _pool.Get();
       var pos = new Vector2(Random.Range(-_limit.x, _limit.x), Random.Range(-_limit.y, _limit.y));
-      var enemy = Instantiate(_enemy, pos, Quaternion.identity);
-      enemy.Init();
+      enemy.transform.position = pos;
+      enemy.Init(this);
 
       yield return new WaitForSeconds(_interval);
-      // }
     }
+  }
+
+  public void ReleaseEnemy(Enemy enemy)
+  {
+    _pool.Release(enemy);
   }
 
   public void Defeat()
   {
-    var findEnemy = GameObject.FindGameObjectsWithTag("Enemy");
+    var enemies = _parent.GetComponentsInChildren<Enemy>();
 
-    for (var i = 0; i < findEnemy.Length; i++)
+    for (var i = 0; i < enemies.Length; i++)
     {
-      Destroy(findEnemy[i].gameObject);
+      ReleaseEnemy(enemies[i]);
     }
   }
 }

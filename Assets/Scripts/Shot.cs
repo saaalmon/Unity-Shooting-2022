@@ -10,14 +10,16 @@ public class Shot : MonoBehaviour
 
   [SerializeField]
   private float _speed;
-
-  /*2022/10/20　追加分*/
   [SerializeField]
   private float _speedDec;
   [SerializeField]
   private float _speedAdd;
   [SerializeField]
   private float _velocityLimit;
+  [SerializeField]
+  private float _timer;
+
+  public Player _manager { get; set; }
 
   private Transform _playerTrans;
 
@@ -30,30 +32,21 @@ public class Shot : MonoBehaviour
 
   }
 
-  // Update is called once per frame
-  void Update()
+  public void Init(Player manager, Vector3 shotDirection)
   {
+    if (rb == null) rb = GetComponent<Rigidbody2D>();
 
-  }
-
-  public void Init(Vector3 shotDirection)
-  {
-    rb = GetComponent<Rigidbody2D>();
-
-    /*2022/10/20　追加分*/
+    _manager = manager;
     _shotDirection = shotDirection;
     _playerTrans = Player._instance.transform;
 
-
     rb.velocity = _shotDirection * _speed;
 
-    Destroy(gameObject, 4.0f);
+    StartCoroutine(DestroyTimer(_timer));
   }
 
   void FixedUpdate()
   {
-    /*　2022/10/20　追加分*/
-
     if (_playerTrans == null) return;
 
     var playerPos = _playerTrans.position;
@@ -75,5 +68,12 @@ public class Shot : MonoBehaviour
         _isFollow = true;
       }
     }
+  }
+
+  private IEnumerator DestroyTimer(float time)
+  {
+    yield return new WaitForSeconds(time);
+
+    _manager.ReleaseShot(this);
   }
 }

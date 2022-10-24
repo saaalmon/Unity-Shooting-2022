@@ -142,6 +142,7 @@ MonoBehaviour:
   _speedDec: 0.9
   _speedAdd: 1.05
   _velocityLimit: 1
+  _timer: 2
   _isFollow: 0
 --- !u!95 &-1710992556140473446
 Animator:

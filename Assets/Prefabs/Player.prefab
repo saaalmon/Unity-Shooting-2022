@@ -153,9 +153,9 @@ MonoBehaviour:
   _hitImpulse: {fileID: 4540960622826707040}
   _deadImpulse: {fileID: 5089196784324043719}
   _shotImpulse: {fileID: 3075598339553512187}
-  _shot: {fileID: 6899600771531734548, guid: 32747b49c9db04cab85e140df70c2279, type: 3}
+  _prefab: {fileID: 6899600771531734548, guid: 32747b49c9db04cab85e140df70c2279, type: 3}
   _speed: 10
-  _invTimer: 1
+  _invTimer: 2
   _hpMax: 3
 --- !u!95 &-8339347103772627034
 Animator:

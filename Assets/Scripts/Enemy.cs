@@ -21,8 +21,7 @@ public class Enemy : MonoBehaviour
   [SerializeField]
   private float _hpMax;
 
-  [SerializeField]
-  private int _itemDropCount;
+  public EnemyManager _manager { get; set; }
 
   public int _score;
 
@@ -30,12 +29,6 @@ public class Enemy : MonoBehaviour
 
   // Start is called before the first frame update
   void Start()
-  {
-
-  }
-
-  // Update is called once per frame
-  void Update()
   {
 
   }
@@ -50,8 +43,9 @@ public class Enemy : MonoBehaviour
     }
   }
 
-  public void Init()
+  public void Init(EnemyManager manager)
   {
+    _manager = manager;
     _hp = _hpMax;
   }
 
@@ -60,12 +54,11 @@ public class Enemy : MonoBehaviour
     _hitImpulse.GenerateImpulse();
 
     Instantiate(_hitParticle, transform.position, Quaternion.identity);
-
   }
 
   private void Dead()
   {
-    Destroy(gameObject);
+    _manager.ReleaseEnemy(this);
 
     _deadImpulse.GenerateImpulse();
 
