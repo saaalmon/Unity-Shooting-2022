@@ -132,14 +132,21 @@ public class UIManager : MonoBehaviour
 
   public void OpenPanel(CanvasGroup panel, CustomTextButton button)
   {
-    panel.gameObject.SetActive(true);
+    var seq = DOTween.Sequence()
+   .AppendCallback(() => panel.gameObject.SetActive(true))
+   .AppendCallback(() => panel.transform.localScale = Vector3.zero)
+   .Append(panel.transform.DOScale(Vector3.one, 0.1f))
+   .Play();
 
     button.Selected();
   }
 
   public void ClosePanel(CanvasGroup panel, CustomTextButton button)
   {
-    panel.gameObject.SetActive(false);
+    var seq = DOTween.Sequence()
+       .Append(panel.transform.DOScale(Vector3.zero, 0.1f))
+       .AppendCallback(() => panel.gameObject.SetActive(false))
+       .Play();
 
     button.Selected();
   }

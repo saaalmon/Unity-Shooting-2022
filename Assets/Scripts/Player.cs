@@ -58,16 +58,17 @@ public class Player : MonoBehaviour
 
     _hp.Value = _hpMax;
 
-    _parent = new GameObject("Shots");
+    var parent = GameObject.Find("Shots");
+
+    if (parent == null) _parent = new GameObject("Shots");
+    else _parent = parent;
 
     _pool = new ObjectPool<Shot>(
-        () => Instantiate(_shot, _parent.transform),             // プールが空のときに新しいインスタンスを生成する処理
-        target => target.gameObject.SetActive(true),             // プールから取り出されたときの処理 
-        target => target.gameObject.SetActive(false),            // プールに戻したときの処理
-        target => Destroy(target),                               // プールがmaxSizeを超えたときの処理
-        true,                                                    // 同一インスタンスが登録されていないかチェックするかどうか
-        10,                                                      // デフォルトの容量
-        100);
+        () => Instantiate(_shot, _parent.transform),
+        target => target.gameObject.SetActive(true),
+        target => target.gameObject.SetActive(false),
+        target => Destroy(target),
+        true, 10, 20);
   }
 
   // Update is called once per frame
@@ -140,12 +141,7 @@ public class Player : MonoBehaviour
     //プールオブジェクトの取得
     var prefab = _pool.Get();
     prefab.transform.position = transform.position;
-
     prefab.Init(this, MouseDirection());
-
-    // var shot = Instantiate(_shot, transform.position, Quaternion.identity);
-
-    // shot.Init(MouseDirection());
 
     _shotImpulse.GenerateImpulse();
 

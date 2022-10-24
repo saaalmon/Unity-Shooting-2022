@@ -36,13 +36,13 @@ public class Shot : MonoBehaviour
   {
     if (rb == null) rb = GetComponent<Rigidbody2D>();
 
+    _isFollow = false;
+
     _manager = manager;
     _shotDirection = shotDirection;
     _playerTrans = Player._instance.transform;
 
     rb.velocity = _shotDirection * _speed;
-
-    StartCoroutine(DestroyTimer(_timer));
   }
 
   void FixedUpdate()
@@ -68,12 +68,5 @@ public class Shot : MonoBehaviour
         _isFollow = true;
       }
     }
-  }
-
-  private IEnumerator DestroyTimer(float time)
-  {
-    yield return new WaitForSeconds(time);
-
-    _manager.ReleaseShot(this);
   }
 }

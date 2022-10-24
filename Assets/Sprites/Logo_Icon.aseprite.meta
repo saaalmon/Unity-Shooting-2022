@@ -17,7 +17,7 @@ ScriptedImporter:
     ditheringMatrixType: 0
     colorMode: 0
   spriteImportOptions:
-    pixelsPerUnit: 100
+    pixelsPerUnit: 16
     pivot: {x: 0.5, y: 0.5}
     extrude: 0
     meshType: 1
