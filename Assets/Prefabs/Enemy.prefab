@@ -141,8 +141,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hitImpulse: {fileID: 8585431078113825025}
   _deadImpulse: {fileID: 5400883902044394512}
-  _deadParticle: {fileID: 1250084612787549438, guid: 39db4e5a753844f4fb180e0442513e9c, type: 3}
-  _item: {fileID: 3803438921721279545, guid: 785ff7746397f4cfead20021d0453749, type: 3}
+  _hitParticle: {fileID: 1250084612787549438, guid: 39db4e5a753844f4fb180e0442513e9c, type: 3}
+  _deadParticle: {fileID: 1934341175217973634, guid: 1635d9b523ebf455db068d6a936d2cb7, type: 3}
   _speed: 5
   _hpMax: 3
   _itemDropCount: 5

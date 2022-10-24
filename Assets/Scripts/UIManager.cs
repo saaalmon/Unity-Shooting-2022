@@ -17,6 +17,15 @@ public class UIManager : MonoBehaviour
   private CustomTextButton _configButton;
   [SerializeField]
   private CustomTextButton _creditButton;
+  [SerializeField]
+  private CustomTextButton _configCloseButton;
+  [SerializeField]
+  private CustomTextButton _readmeCloseButton;
+
+  [SerializeField]
+  private CanvasGroup _configPanel;
+  [SerializeField]
+  private CanvasGroup _readmePanel;
 
   [SerializeField]
   private TextMeshProUGUI _readyText;
@@ -67,13 +76,33 @@ public class UIManager : MonoBehaviour
     _configButton.onClickCallback =
     () =>
     {
+      OpenPanel(_configPanel, _configCloseButton);
+
       Debug.Log(_configButton.name);
     };
 
     _creditButton.onClickCallback =
     () =>
     {
+      OpenPanel(_readmePanel, _readmeCloseButton);
+
       Debug.Log(_creditButton.name);
+    };
+
+    _configCloseButton.onClickCallback =
+    () =>
+    {
+      ClosePanel(_configPanel, _startButton);
+
+      Debug.Log(_configCloseButton.name);
+    };
+
+    _readmeCloseButton.onClickCallback =
+    () =>
+    {
+      ClosePanel(_readmePanel, _startButton);
+
+      Debug.Log(_readmeCloseButton.name);
     };
   }
 
@@ -99,6 +128,20 @@ public class UIManager : MonoBehaviour
 
       _gameManager.ReturnButton();
     };
+  }
+
+  public void OpenPanel(CanvasGroup panel, CustomTextButton button)
+  {
+    panel.gameObject.SetActive(true);
+
+    button.Selected();
+  }
+
+  public void ClosePanel(CanvasGroup panel, CustomTextButton button)
+  {
+    panel.gameObject.SetActive(false);
+
+    button.Selected();
   }
 
   public void SetResultScore()

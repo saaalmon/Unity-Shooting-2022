@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour
   [SerializeField]
   private CinemachineImpulseSource _deadImpulse;
   [SerializeField]
+  private ParticleSystem _hitParticle;
+  [SerializeField]
   private ParticleSystem _deadParticle;
 
   [SerializeField]
@@ -57,7 +59,7 @@ public class Enemy : MonoBehaviour
   {
     _hitImpulse.GenerateImpulse();
 
-    Instantiate(_deadParticle, transform.position, Quaternion.identity);
+    Instantiate(_hitParticle, transform.position, Quaternion.identity);
 
   }
 
@@ -70,24 +72,5 @@ public class Enemy : MonoBehaviour
     Instantiate(_deadParticle, transform.position, Quaternion.identity);
 
     EventBus.Instance.NotifyDefeatEnemy(this);
-
-    //GameManager._instance.AddScore(_score);
-
-    //ItemDrop();
   }
-
-  // private void ItemDrop()
-  // {
-  //   for (var i = 0; i < _itemDropCount; i++)
-  //   {
-  //     var item = Instantiate(_item, transform.position, Quaternion.identity);
-
-  //     var angle = Random.Range(0, 360);
-  //     var f = angle * Mathf.Deg2Rad;
-
-  //     var itemDirection = new Vector3(Mathf.Cos(f), Mathf.Sin(f), 0);
-
-  //     item.Init(itemDirection);
-  //   }
-  // }
 }
