@@ -19,7 +19,7 @@ public class Shot : MonoBehaviour
   [SerializeField]
   private float _timer;
 
-  public Player _manager { get; set; }
+  public ShotManager _manager { get; set; }
 
   private Transform _playerTrans;
 
@@ -32,7 +32,7 @@ public class Shot : MonoBehaviour
 
   }
 
-  public void Init(Player manager, Vector3 shotDirection)
+  public void Init(ShotManager manager, Vector3 shotDirection)
   {
     if (rb == null) rb = GetComponent<Rigidbody2D>();
 

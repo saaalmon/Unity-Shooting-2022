@@ -17,6 +17,8 @@ public partial class GameManager : MonoBehaviour
   [SerializeField]
   private EnemyManager _enemyManager;
   [SerializeField]
+  private ShotManager _shotManager;
+  [SerializeField]
   private UIManager _UIManager;
   [SerializeField]
   private CinemachineVirtualCamera _cinemaCamea;
@@ -38,7 +40,6 @@ public partial class GameManager : MonoBehaviour
   private TimelineAsset _gameOut;
   [SerializeField]
   private TimelineAsset _resultIn;
-
 
   [SerializeField]
   private Player _player;
@@ -151,6 +152,8 @@ public partial class GameManager : MonoBehaviour
 
     var player = Instantiate(_player, transform.position, Quaternion.identity);
     _playerInstance = player;
+    player.Init(_shotManager);
+
     _UIManager.SetHpGauge(player);
 
     _cinemaCamea.Follow = _playerInstance.transform;
@@ -271,7 +274,6 @@ public partial class GameManager
 
       owner._director.playableAsset = owner._resultIn;
       owner._director.Play();
-
 
       // Destroy(owner._playerInstance.gameObject);
       // owner._playerInstance = null;

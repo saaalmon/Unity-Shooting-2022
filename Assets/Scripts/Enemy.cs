@@ -7,6 +7,9 @@ using Cinemachine;
 [RequireComponent(typeof(CircleCollider2D))]
 public class Enemy : MonoBehaviour
 {
+  private CircleCollider2D coll;
+  private Animator anim;
+
   [SerializeField]
   private CinemachineImpulseSource _hitImpulse;
   [SerializeField]
@@ -20,12 +23,16 @@ public class Enemy : MonoBehaviour
   private float _speed;
   [SerializeField]
   private float _hpMax;
+  [SerializeField]
+  private float _timer;
 
   public EnemyManager _manager { get; set; }
 
   public int _score;
 
   private float _hp;
+  private bool _isWarning = true;
+  private Coroutine _cor;
 
   // Start is called before the first frame update
   void Start()
@@ -47,6 +54,11 @@ public class Enemy : MonoBehaviour
   {
     _manager = manager;
     _hp = _hpMax;
+
+    if (coll == null) coll = GetComponent<CircleCollider2D>();
+    if (anim == null) anim = GetComponent<Animator>();
+
+    _cor = StartCoroutine(WarningTimer());
   }
 
   private void Hit()
@@ -65,5 +77,18 @@ public class Enemy : MonoBehaviour
     Instantiate(_deadParticle, transform.position, Quaternion.identity);
 
     EventBus.Instance.NotifyDefeatEnemy(this);
+  }
+
+  private IEnumerator WarningTimer()
+  {
+    _isWarning = true;
+    anim.SetBool("isWarning", _isWarning);
+    coll.enabled = false;
+
+    yield return new WaitForSeconds(_timer);
+
+    _isWarning = false;
+    anim.SetBool("isWarning", _isWarning);
+    coll.enabled = true;
   }
 }

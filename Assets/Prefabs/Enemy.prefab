@@ -77,7 +77,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 254802423
-  m_SortingLayer: 5
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: -4008898430271998344, guid: 5d1139339c29a4ca599e1eb506dc6b35, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -145,7 +145,7 @@ MonoBehaviour:
   _deadParticle: {fileID: 1934341175217973634, guid: 1635d9b523ebf455db068d6a936d2cb7, type: 3}
   _speed: 5
   _hpMax: 3
-  _itemDropCount: 5
+  _timer: 2
   _score: 100
 --- !u!95 &-202189564471191661
 Animator:

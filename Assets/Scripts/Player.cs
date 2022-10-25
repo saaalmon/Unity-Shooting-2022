@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
   private BoxCollider2D coll;
   private SpriteRenderer sp;
   private Animator anim;
+  private ShotManager _shotManager;
 
   public static Player _instance;
 
@@ -25,18 +26,11 @@ public class Player : MonoBehaviour
   private CinemachineImpulseSource _shotImpulse;
 
   [SerializeField]
-  private Shot _prefab;
-  [SerializeField]
   private float _speed;
   [SerializeField]
   private float _invTimer;
 
   public int _hpMax;
-
-  public Shot _shot { get; private set; }
-
-  private ObjectPool<Shot> _pool;
-  private GameObject _parent;
 
   public IReadOnlyReactiveProperty<int> Hp => _hp;
   private readonly IntReactiveProperty _hp = new IntReactiveProperty(0);
@@ -51,24 +45,7 @@ public class Player : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
-    rb = GetComponent<Rigidbody2D>();
-    coll = GetComponent<BoxCollider2D>();
-    sp = GetComponent<SpriteRenderer>();
-    anim = GetComponent<Animator>();
 
-    _hp.Value = _hpMax;
-
-    var parent = GameObject.Find("Shots");
-
-    if (parent == null) _parent = new GameObject("Shots");
-    else _parent = parent;
-
-    _pool = new ObjectPool<Shot>(
-        () => Instantiate(_shot, _parent.transform),
-        target => target.gameObject.SetActive(true),
-        target => target.gameObject.SetActive(false),
-        target => Destroy(target),
-        true, 10, 20);
   }
 
   // Update is called once per frame
@@ -101,6 +78,17 @@ public class Player : MonoBehaviour
     }
   }
 
+  public void Init(ShotManager manager)
+  {
+    _shotManager = manager;
+    _hp.Value = _hpMax;
+
+    rb = GetComponent<Rigidbody2D>();
+    coll = GetComponent<BoxCollider2D>();
+    sp = GetComponent<SpriteRenderer>();
+    anim = GetComponent<Animator>();
+  }
+
   private void Hit()
   {
     anim.SetTrigger("isHit");
@@ -118,7 +106,7 @@ public class Player : MonoBehaviour
 
     GameManager._instance.GameFinish();
 
-    ClearShot();
+    _shotManager.ClearShot();
   }
 
   private void Move()
@@ -136,32 +124,20 @@ public class Player : MonoBehaviour
 
   private void Shot()
   {
-    _shot = _prefab;
-
-    //プールオブジェクトの取得
-    var prefab = _pool.Get();
-    prefab.transform.position = transform.position;
-    prefab.Init(this, MouseDirection());
+    var shotDirection = MouseDirection();
+    _shotManager.Generate(transform.position, Quaternion.identity, shotDirection);
 
     _shotImpulse.GenerateImpulse();
 
+    // _shot = _prefab;
+
+    // //プールオブジェクトの取得
+    // var prefab = _pool.Get();
+    // prefab.transform.position = transform.position;
+    // prefab.Init(this, MouseDirection());
+
     // transform.DOScaleY(0.5f, 0.05f).SetLoops(2, LoopType.Yoyo)
     // .OnComplete(() => transform.localScale = Vector3.one);
-  }
-
-  public void ReleaseShot(Shot shot)
-  {
-    _pool.Release(shot);
-  }
-
-  public void ClearShot()
-  {
-    var shots = _parent.GetComponentsInChildren<Shot>();
-
-    for (var i = 0; i < shots.Length; i++)
-    {
-      _pool.Release(shots[i]);
-    }
   }
 
   private Vector3 MouseDirection()
