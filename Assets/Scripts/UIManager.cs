@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using UniRx;
+using KanKikuchi.AudioManager;
 
 public class UIManager : MonoBehaviour
 {
@@ -70,6 +71,8 @@ public class UIManager : MonoBehaviour
     {
       _gameManager.StartButton();
 
+      SoundManager.PlaySE(SEPath.BUTTON1);
+
       Debug.Log(_startButton.name);
     };
 
@@ -119,12 +122,16 @@ public class UIManager : MonoBehaviour
     () =>
     {
       Debug.Log(_rankingButton.name);
+
+      SoundManager.PlaySE(SEPath.BUTTON1);
     };
 
     _returnButton.onClickCallback =
     () =>
     {
       Debug.Log(_returnButton.name);
+
+      SoundManager.PlaySE(SEPath.BUTTON1);
 
       _gameManager.ReturnButton();
     };
@@ -138,6 +145,8 @@ public class UIManager : MonoBehaviour
    .Append(panel.transform.DOScale(Vector3.one, 0.1f))
    .Play();
 
+    SoundManager.PlaySE(SEPath.BUTTON1);
+
     button.Selected();
   }
 
@@ -148,12 +157,17 @@ public class UIManager : MonoBehaviour
        .AppendCallback(() => panel.gameObject.SetActive(false))
        .Play();
 
+    SoundManager.PlaySE(SEPath.BUTTON2);
+
     button.Selected();
   }
 
   public void SetResultScore()
   {
-    _resultScoreText.DOCounter(0, _resultScore, 0.5f);
+    var seq = DOTween.Sequence()
+       .Append(_resultScoreText.DOCounter(0, _resultScore, 0.5f))
+       .AppendCallback(() => SoundManager.PlaySE(SEPath.SCORE))
+       .Play();
   }
 
   public void SetHpGauge(Player player)
@@ -167,5 +181,10 @@ public class UIManager : MonoBehaviour
   public void SetReadyText(string text)
   {
     _readyText.text = text;
+  }
+
+  public void PlayGoSE()
+  {
+    SoundManager.PlaySE(SEPath.GO);
   }
 }

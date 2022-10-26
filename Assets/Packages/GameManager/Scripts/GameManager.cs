@@ -5,6 +5,7 @@ using UniRx;
 using Cinemachine;
 using UnityEngine.Timeline;
 using UnityEngine.Playables;
+using KanKikuchi.AudioManager;
 
 public partial class GameManager : MonoBehaviour
 {
@@ -143,12 +144,12 @@ public partial class GameManager : MonoBehaviour
 
   public void TitleInit()
   {
-
+    SoundManager.PlayBGM(BGMPath.TITLE);
   }
 
   public void GameInit()
   {
-    Debug.Log("play");
+    SoundManager.PlayBGM(BGMPath.GAME);
 
     var player = Instantiate(_player, transform.position, Quaternion.identity);
     _playerInstance = player;
@@ -168,6 +169,8 @@ public partial class GameManager : MonoBehaviour
 
   public void GameFinish()
   {
+    SoundManager.PlayBGM(BGMPath.RESULT);
+
     Destroy(_playerInstance.gameObject);
     _playerInstance = null;
 
@@ -205,8 +208,7 @@ public partial class GameManager
       owner._director.playableAsset = owner._titleIn;
       owner._director.Play();
 
-      /*　2022/10/16　変更範囲　*/
-      //owner.ChangeCurrentState(stateGame);
+      owner.TitleInit();
     }
 
     public override void OnUpdate(GameManager owner)
@@ -217,6 +219,8 @@ public partial class GameManager
     public override void OnExit(GameManager owner, GameStateBase nextState)
     {
       owner._titleCanvas.gameObject.SetActive(false);
+
+      SoundManager.StopBGM();
     }
   }
 
@@ -232,28 +236,11 @@ public partial class GameManager
 
       owner._director.playableAsset = owner._gameIn;
       owner._director.Play();
-
-      // var player = Instantiate(owner._player, owner.transform.position, Quaternion.identity);
-      // owner._playerInstance = player;
-      // owner._UIManager.SetHpGauge(player);
-
-      // owner._cinemaCamea.Follow = owner._playerInstance.transform;
-
-      // /*　2022/10/16　変更範囲　*/
-      // owner._timer.Value = owner._timerMax;
-      // owner._score.Value = 0;
     }
 
     public override void OnUpdate(GameManager owner)
     {
-      /*　2022/10/16　変更範囲　*/
-      // owner._enemyManager.Generate();
 
-      // owner._timer.Value -= Time.deltaTime;
-
-      // Debug.Log(owner._timer);
-
-      // if (owner._timer.Value < 0) owner.ChangeCurrentState(stateResult);
     }
 
     public override void OnExit(GameManager owner, GameStateBase nextState)
@@ -275,12 +262,7 @@ public partial class GameManager
       owner._director.playableAsset = owner._resultIn;
       owner._director.Play();
 
-      // Destroy(owner._playerInstance.gameObject);
-      // owner._playerInstance = null;
-
-      // owner._cinemaCamea.Follow = null;
-
-      // owner._enemyManager.Defeat();
+      owner.ResultInit();
     }
 
     public override void OnUpdate(GameManager owner)
@@ -291,6 +273,8 @@ public partial class GameManager
     public override void OnExit(GameManager owner, GameStateBase nextState)
     {
       owner._resultCanvas.gameObject.SetActive(false);
+
+      SoundManager.StopBGM();
     }
   }
 }

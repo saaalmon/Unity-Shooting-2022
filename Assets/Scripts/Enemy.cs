@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using KanKikuchi.AudioManager;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CircleCollider2D))]
@@ -65,6 +66,8 @@ public class Enemy : MonoBehaviour
   {
     _hitImpulse.GenerateImpulse();
 
+    SoundManager.PlaySE(SEPath.ENEMY_HIT);
+
     Instantiate(_hitParticle, transform.position, Quaternion.identity);
   }
 
@@ -73,6 +76,8 @@ public class Enemy : MonoBehaviour
     _manager.ReleaseEnemy(this);
 
     _deadImpulse.GenerateImpulse();
+
+    SoundManager.PlaySE(SEPath.ENEMY_DEAD);
 
     Instantiate(_deadParticle, transform.position, Quaternion.identity);
 

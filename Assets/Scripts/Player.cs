@@ -5,6 +5,7 @@ using Cinemachine;
 using DG.Tweening;
 using UniRx;
 using UnityEngine.Pool;
+using KanKikuchi.AudioManager;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
@@ -64,8 +65,6 @@ public class Player : MonoBehaviour
   {
     if (other.gameObject.TryGetComponent(out Enemy enemy) && !_isInvincible)
     {
-      //enemy._manager.ReleaseEnemy(enemy);
-
       _hp.Value--;
       if (_hp.Value > 0) Hit();
       else Dead();
@@ -97,6 +96,8 @@ public class Player : MonoBehaviour
 
     _hitImpulse.GenerateImpulse();
 
+    SoundManager.PlaySE(SEPath.PLAYER_HIT);
+
     StartCoroutine(InvincibleTime());
   }
 
@@ -106,6 +107,8 @@ public class Player : MonoBehaviour
 
     _deadImpulse.GenerateImpulse();
 
+    SoundManager.PlaySE(SEPath.PLAYER_DEAD);
+
     GameManager._instance.GameFinish();
 
     _shotManager.ClearShot();
@@ -113,8 +116,8 @@ public class Player : MonoBehaviour
 
   private void Move()
   {
-    var h = Input.GetAxis("Horizontal");
-    var v = Input.GetAxis("Vertical");
+    var h = Input.GetAxisRaw("Horizontal");
+    var v = Input.GetAxisRaw("Vertical");
 
     rb.velocity = new Vector2(h * _speed, v * _speed);
 
@@ -131,15 +134,7 @@ public class Player : MonoBehaviour
 
     _shotImpulse.GenerateImpulse();
 
-    // _shot = _prefab;
-
-    // //プールオブジェクトの取得
-    // var prefab = _pool.Get();
-    // prefab.transform.position = transform.position;
-    // prefab.Init(this, MouseDirection());
-
-    // transform.DOScaleY(0.5f, 0.05f).SetLoops(2, LoopType.Yoyo)
-    // .OnComplete(() => transform.localScale = Vector3.one);
+    SoundManager.PlaySE(SEPath.SHOT);
   }
 
   private Vector3 MouseDirection()
