@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
   private SpriteRenderer sp;
   private Animator anim;
   private ShotManager _shotManager;
+  private Camera _mainCamera;
 
   public static Player _instance;
 
@@ -81,6 +82,7 @@ public class Player : MonoBehaviour
   public void Init(ShotManager manager)
   {
     _shotManager = manager;
+    _mainCamera = Camera.main;
     _hp.Value = _hpMax;
 
     rb = GetComponent<Rigidbody2D>();
@@ -142,7 +144,7 @@ public class Player : MonoBehaviour
 
   private Vector3 MouseDirection()
   {
-    var screenPos = Camera.main.WorldToScreenPoint(transform.position);
+    var screenPos = _mainCamera.WorldToScreenPoint(transform.position);
     var direction = Input.mousePosition - screenPos;
     var angle = Utils.GetAngle(Vector3.zero, direction);
 
