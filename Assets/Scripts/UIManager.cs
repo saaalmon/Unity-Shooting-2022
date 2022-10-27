@@ -11,7 +11,11 @@ public class UIManager : MonoBehaviour
 {
   [SerializeField]
   private GameManager _gameManager;
+  [SerializeField]
+  private RankingManager _rankingManager;
 
+  [SerializeField]
+  private TMP_InputField _nameInput;
   [SerializeField]
   private CustomTextButton _startButton;
   [SerializeField]
@@ -38,8 +42,6 @@ public class UIManager : MonoBehaviour
   [SerializeField]
   private TextMeshProUGUI _resultScoreText;
   [SerializeField]
-  private CustomTextButton _rankingButton;
-  [SerializeField]
   private CustomTextButton _returnButton;
 
   private int _resultScore;
@@ -64,7 +66,9 @@ public class UIManager : MonoBehaviour
 
   public void StartInit()
   {
-    _startButton.Selected();
+    _nameInput.text = null;
+
+    _nameInput.Select();
 
     _startButton.onClickCallback =
     () =>
@@ -111,20 +115,12 @@ public class UIManager : MonoBehaviour
 
   public void GameInit()
   {
-
+    _rankingManager.SetName(_nameInput.text.ToString());
   }
 
   public void ResultInit()
   {
-    _rankingButton.Selected();
-
-    _rankingButton.onClickCallback =
-    () =>
-    {
-      Debug.Log(_rankingButton.name);
-
-      SoundManager.PlaySE(SEPath.BUTTON1);
-    };
+    _returnButton.Selected();
 
     _returnButton.onClickCallback =
     () =>
