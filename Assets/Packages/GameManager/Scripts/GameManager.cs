@@ -25,6 +25,8 @@ public partial class GameManager : MonoBehaviour
   private CinemachineVirtualCamera _cinemaCamea;
   [SerializeField]
   private PlayableDirector _director;
+  [SerializeField]
+  private RankingManager _rankingManager;
 
   [SerializeField]
   private CanvasGroup _titleCanvas;
@@ -184,6 +186,9 @@ public partial class GameManager : MonoBehaviour
     _director.playableAsset = _gameOut;
     _director.Play();
 
+    _rankingManager.SetScore(_score.Value);
+    _rankingManager.SetRanking();
+
     Debug.Log("finish");
   }
 
@@ -209,6 +214,8 @@ public partial class GameManager
       owner._director.Play();
 
       owner.TitleInit();
+
+      owner._rankingManager.SetNCMBObject();
     }
 
     public override void OnUpdate(GameManager owner)
@@ -255,14 +262,16 @@ public partial class GameManager
     {
       Debug.Log("Result");
 
-      owner._resultCanvas.gameObject.SetActive(true);
-
       owner._UIManager.ResultInit();
 
       owner._director.playableAsset = owner._resultIn;
       owner._director.Play();
 
       owner.ResultInit();
+
+      owner._resultCanvas.gameObject.SetActive(true);
+
+      owner._rankingManager.DisplayScoreBoard();
     }
 
     public override void OnUpdate(GameManager owner)

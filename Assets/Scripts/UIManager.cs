@@ -40,6 +40,8 @@ public class UIManager : MonoBehaviour
   private Image _hpGauge;
 
   [SerializeField]
+  private TextMeshProUGUI _resultNameText;
+  [SerializeField]
   private TextMeshProUGUI _resultScoreText;
   [SerializeField]
   private CustomTextButton _returnButton;
@@ -115,7 +117,7 @@ public class UIManager : MonoBehaviour
 
   public void GameInit()
   {
-    _rankingManager.SetName(_nameInput.text.ToString());
+    if (_nameInput.text != "") _rankingManager.SetName(_nameInput.text.ToString());
   }
 
   public void ResultInit()
@@ -131,6 +133,8 @@ public class UIManager : MonoBehaviour
 
       _gameManager.ReturnButton();
     };
+
+    SetResultName();
   }
 
   public void OpenPanel(CanvasGroup panel, CustomTextButton button)
@@ -164,6 +168,11 @@ public class UIManager : MonoBehaviour
        .Append(_resultScoreText.DOCounter(0, _resultScore, 0.5f))
        .AppendCallback(() => SoundManager.PlaySE(SEPath.SCORE))
        .Play();
+  }
+
+  public void SetResultName()
+  {
+    _resultNameText.text = _rankingManager._name.ToString();
   }
 
   public void SetHpGauge(Player player)
