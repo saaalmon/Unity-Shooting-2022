@@ -78,7 +78,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1621465555
-  m_SortingLayer: 6
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: -3763521419439665674, guid: 5d1139339c29a4ca599e1eb506dc6b35, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -153,7 +153,6 @@ MonoBehaviour:
   _hitImpulse: {fileID: 4540960622826707040}
   _deadImpulse: {fileID: 5089196784324043719}
   _shotImpulse: {fileID: 3075598339553512187}
-  _prefab: {fileID: 6899600771531734548, guid: 32747b49c9db04cab85e140df70c2279, type: 3}
   _speed: 10
   _invTimer: 1
   _hpMax: 3
@@ -346,7 +345,7 @@ MonoBehaviour:
     m_DissipationMode: 2
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
-  m_DefaultVelocity: {x: 0.5, y: 0.5, z: 0}
+  m_DefaultVelocity: {x: 0.3, y: 0.3, z: 0}
 --- !u!1 &7662256155448949090
 GameObject:
   m_ObjectHideFlags: 0
